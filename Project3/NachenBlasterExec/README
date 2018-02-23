@@ -1,0 +1,8 @@
+Type
+	./NachenBlaster
+to play the game.
+
+You won't hear any sound effects. We haven't tested the Linux version beyond
+ensuring it builds and tries to connect to an X11 server, but it should work
+if you set your DISPLAY environment variable correctly, which we haven't had
+a chance to try.

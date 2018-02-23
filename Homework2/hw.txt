@@ -1,0 +1,41 @@
+Mudith Mallajosyula, ID# 404937201, Disc 3C
+
+Homework 2
+
+----------------------------------------
+
+
+
+2. The first 12 coordinates popped off by the mazestack program are:
+
+    1. (4, 3)
+    2. (3, 3)
+    3. (5, 3)
+    4. (5, 2)
+    5. (5, 1)
+    6. (6, 1)
+    7. (7, 1)
+    8. (8, 1)
+    9. (8, 2)
+    10. (6, 3)
+    11. (4, 4)
+    12. (4, 5)
+
+
+
+4. The first 12 coordinates dequeued by the mazequeue program are:
+    
+    1. (4, 3)
+    2. (4, 4)
+    3. (5, 3)
+    4. (3, 3)
+    5. (4, 5)
+    6. (6, 3)
+    7. (5, 2)
+    8. (4, 6)
+    9. (5, 5)
+    10. (5, 1)
+    11. (4, 7)
+    12. (6, 5)
+
+In the first program, new coordinates were added to the top of the stack and then checked in reverse order (the last to be added was the first to be checked). In the second program, the new coordinates were added to the back of the queue and checked in the normal order (the first to be added were the first to be checked).
