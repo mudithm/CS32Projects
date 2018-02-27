@@ -18,10 +18,16 @@ public:
     virtual int move();
     virtual void cleanUp();
     void addActor(Actor* act);
+    void decShips();
+    void incKills();
+    NachenBlaster* getPlayer();
+    vector<Actor*>* getActors();
 
 private:
 	vector<Actor*> m_actors;
 	NachenBlaster* m_player;
+	int m_numKilled;
+	int m_numShips;
 };
 
 #endif // STUDENTWORLD_H_

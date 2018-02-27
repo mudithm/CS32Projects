@@ -13,8 +13,14 @@ class Actor : public GraphObject
         virtual ~Actor();
         virtual void doSomething() = 0;
         virtual bool isAlive() const = 0;
+        virtual void kill();
+        virtual double getHP();
+        virtual int travdir();
+        virtual void setDir(int dir);
+        int getType();
 
     private:
+    	int m_type;
 
 };
 
@@ -48,14 +54,20 @@ class Spaceship : public Actor
 {
 	public:
 		Spaceship(int imageID, int xPos, int yPos, int dir, double size, double HP, double speed, StudentWorld* world, int depth=0);
+		~Spaceship();
 		double getHP() const;
 		double getSpeed() const;
+		void setSpeed(double speed);
+		void damage(int amt);
+		virtual void checkCollisions(int direction);
 		StudentWorld* getWorld() const;
 		virtual bool isAlive() const;
 	private:
 		double m_HP;
 		double m_speed;
 		StudentWorld* m_world;
+		int m_travdir;
+
 
 };
 
@@ -66,20 +78,60 @@ class NachenBlaster : public Spaceship
 	public:
 		NachenBlaster(StudentWorld* world);
 		virtual void doSomething() override;
+		void incTorpedoes(int num);
 		int getCabbage() const;
 	private:
 		int m_cabbage;
+		int m_numTorpedoes;
 
+};
+
+class Alien : public Spaceship
+{
+	public:
+		Alien(int imageID, int xPos, int yPos, double HP, double speed, StudentWorld* world, int points);
+		//void move();
+		virtual ~Alien();
+		virtual void kill();
+		void setDeltaX(int x);
+		void setDeltaY(int y);
+		void setFlightLen(int len);
+		int getDeltaX();
+		int getDeltaY();
+		int getLen();
+		void move();
+		bool fire(int chk);
+		void checkFlightPlan();
+	private:
+		int m_points;
+		int m_flightPlanLength;
+		double m_deltaX;
+		double m_deltaY;
 };
 
 //Smallgon class definition
-class Smallgon : public Spaceship
+class Smallgon : public Alien
 {
 	public:
-		Smallgon(int xPos, int yPos, int dir, StudentWorld* world);
+		Smallgon(int xPos, int yPos, StudentWorld* world);
 		virtual void doSomething() override;
 };
 
+//Smoregon class definition
+class Smoregon : public Alien
+{
+	public:
+		Smoregon(int xPos, int yPos, StudentWorld* world);
+		virtual void doSomething() override;
+};
+
+//Snagglegon class definition
+class Snagglegon : public Alien
+{
+	public:
+		Snagglegon(int xPos, int yPos, StudentWorld* world);
+		virtual void doSomething() override;
+};
 
 /////////////////////////////
 // Projectile Type Classes //
@@ -91,8 +143,12 @@ class Projectile : public Actor
 	public:
 		Projectile(int imageID, int xPos, int yPos, int dir);
 		virtual bool isAlive() const;
+		virtual void kill();
+		virtual int travdir();
+		void setDir(int dir);
 	private:
 		bool m_alive;
+		int m_travdir;
 
 };
 
@@ -124,7 +180,7 @@ class Torpedo : public Projectile
 
 ////////////////////////
 // Goodie-Type clases //
-///////////////////////
+////////////////////////
 
 // Goodie class definition
 class Goodie : public Projectile
@@ -132,8 +188,6 @@ class Goodie : public Projectile
 	public:
 		Goodie(int imageID, int xPos, int yPos, int dir);
 		virtual void doSomething();
-	private:
-		int m_type;
 };
 
 
@@ -157,6 +211,12 @@ class TorpedoGoodie: public Goodie
 	public:
 		TorpedoGoodie(int xPos, int yPos);
 };
+
+/////////////////////////
+// Auxiliary Functions //
+/////////////////////////
+
+double euclidean_dist(int x1, int y1, int x2, int y2);
 
 
 #endif // ACTOR_H_
