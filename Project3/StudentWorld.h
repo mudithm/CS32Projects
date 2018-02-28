@@ -19,6 +19,7 @@ public:
     virtual void cleanUp();
     void addActor(Actor* act);
     void decShips();
+    void incShips();
     void incKills();
     NachenBlaster* getPlayer();
     vector<Actor*>* getActors();

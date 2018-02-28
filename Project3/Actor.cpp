@@ -12,7 +12,7 @@ using namespace std;
 Actor::Actor(int imageID, int xPos, int yPos, int dir, double size, int depth ): GraphObject(imageID, xPos, yPos, dir, size, depth), m_type(imageID)
 {}
 
-int Actor::getType()
+int Actor::getType() const
 {
 	return m_type;
 }
@@ -21,17 +21,20 @@ void Actor::kill()
 {}
 
 int Actor::travdir()
-{}
+{
+	return 0;
+}
 
 void Actor::setDir(int dir)
 {}
 
 double Actor::getHP()
-{}
+{
+	return 0;
+}
 
 Actor::~Actor()
 {
-	//cerr << "deleted " << getType() << endl;
 }
 
 
@@ -119,6 +122,7 @@ void Spaceship::damage(int type)
 			break;
 		case IID_REPAIR_GOODIE:
 			amt = -10;
+			break;
 		default:
 			amt = 0;
 	}
@@ -130,10 +134,10 @@ void Spaceship::damage(int type)
 bool Spaceship::isAlive() const
 {
 	int x = getX(), y = getY();
+
 	if (m_HP <= 0 || y < 0 || y > VIEW_HEIGHT || x < 0 || x > VIEW_WIDTH)
 	{
-		if (getY() > VIEW_HEIGHT)
-			 cerr << "this is a thing" << endl;
+
 		return false;
 	}
 	return true;
@@ -192,8 +196,9 @@ void Spaceship::checkCollisions(int direction)
 						}
 					}else
 						iterator++;
-					break;
-				}
+				}else
+					iterator++;
+				break;
 			case IID_LIFE_GOODIE:
 				if (direction == 180 && euclidean_dist(getX(), getY(), (*iterator)->getX(), (*iterator)->getY()) <= .75 * (getRadius() + (*iterator)->getRadius()))
 				{
@@ -211,7 +216,7 @@ void Spaceship::checkCollisions(int direction)
 					getWorld()->increaseScore(100);
 					(*iterator)->kill();
 					getWorld()->playSound(SOUND_GOODIE);
-					getWorld()->getPlayer()->damage(IID_REPAIR_GOODIE);
+					damage(IID_REPAIR_GOODIE);
 					return;
 				}else
 					iterator++;
@@ -277,7 +282,7 @@ void NachenBlaster::doSomething()
 					{
 						m_cabbage -= 5;
 						getWorld()->addActor(new Cabbage(getX() + 12, getY()));
-						getWorld()->playSound(SOUND_PLAYER_SHOOT);					
+						getWorld()->playSound(SOUND_PLAYER_SHOOT);
 					}
 
 				}
@@ -330,7 +335,9 @@ int NachenBlaster::getCabbage() const
 // Alien implementations
 
 Alien::Alien(int imageID, int xPos, int yPos, double HP, double speed, StudentWorld* world, int points) : Spaceship (imageID, xPos, yPos, 0, 1.5, HP, speed, world, 1) , m_points(points), m_deltaX(0), m_deltaY(0), m_flightPlanLength(0)
-{}
+{
+	getWorld()->incShips();
+}
 
 
 
@@ -377,6 +384,7 @@ bool Alien::fire(int chk)
 			{
 				case IID_SMALLGON:
 				case IID_SMOREGON:
+
 					getWorld()->addActor(new Turnip(getX() - 14, getY()));
 					getWorld()->playSound(SOUND_ALIEN_SHOOT);
 					break;
@@ -593,14 +601,19 @@ void Cabbage::doSomething()
 	if (! isAlive())
 		return;
 
+
+
 	else
 	{
+
 		moveTo(getX() + 8, getY());
 		if (getDirection() <= 339)
 			setDirection(getDirection() + 20);
 		else 
 			setDirection(0);
 	}
+
+
 	
 }
 
@@ -614,10 +627,8 @@ void Turnip::doSomething()
 {
 	if (! isAlive())
 		return;
-	if (travdir() == 180)
-		moveTo(getX() - 6, getY());
-	else
-		moveTo(getX() + 6, getY());
+	moveTo(getX() - 6, getY());
+
 	if (getDirection() <= 339)
 		setDirection(getDirection() + 20);
 	else 
@@ -633,6 +644,7 @@ void Torpedo::doSomething()
 {
 	if (! isAlive())
 		return;
+
 
 	if (getDirection() == 180)
 		moveTo(getX() - 8, getY());

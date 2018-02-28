@@ -2,7 +2,7 @@
 #include "GameConstants.h"
 #include "GameWorld.h"
 #include <string>
-
+#include <vector>
 #include <cassert>
 #include <iostream>
 
@@ -67,9 +67,6 @@ int StudentWorld::move()
         }
         if ((*iterator)->isAlive())
             (*iterator)->doSomething();
-        
-
-         
     }
 
     // add stars
@@ -106,7 +103,6 @@ int StudentWorld::move()
         else
             addActor(new Snagglegon(VIEW_WIDTH - 1, randInt(0, VIEW_HEIGHT - 1), this));
         
-        m_numShips++;
 
     }
 
@@ -158,6 +154,11 @@ void StudentWorld::addActor(Actor* act)
 void StudentWorld::decShips()
 {
     m_numShips--;
+}
+
+void StudentWorld::incShips()
+{
+    m_numShips++;
 }
 
 void StudentWorld::incKills()

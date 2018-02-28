@@ -17,7 +17,7 @@ class Actor : public GraphObject
         virtual double getHP();
         virtual int travdir();
         virtual void setDir(int dir);
-        int getType();
+        int getType() const;
 
     private:
     	int m_type;
@@ -123,7 +123,7 @@ class Smoregon : public Alien
 	public:
 		Smoregon(int xPos, int yPos, StudentWorld* world);
 		virtual void doSomething() override;
-};
+	};
 
 //Snagglegon class definition
 class Snagglegon : public Alien
