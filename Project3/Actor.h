@@ -54,12 +54,12 @@ class Spaceship : public Actor
 {
 	public:
 		Spaceship(int imageID, int xPos, int yPos, int dir, double size, double HP, double speed, StudentWorld* world, int depth=0);
-		~Spaceship();
+		virtual ~Spaceship();
 		double getHP() const;
 		double getSpeed() const;
 		void setSpeed(double speed);
 		void damage(int amt);
-		virtual void checkCollisions(int direction);
+		void checkCollisions(int direction);
 		StudentWorld* getWorld() const;
 		virtual bool isAlive() const;
 	private:
@@ -79,6 +79,7 @@ class NachenBlaster : public Spaceship
 		NachenBlaster(StudentWorld* world);
 		virtual void doSomething() override;
 		void incTorpedoes(int num);
+		int getTorpedoes();
 		int getCabbage() const;
 	private:
 		int m_cabbage;
@@ -91,7 +92,7 @@ class Alien : public Spaceship
 	public:
 		Alien(int imageID, int xPos, int yPos, double HP, double speed, StudentWorld* world, int points);
 		//void move();
-		virtual ~Alien();
+		~Alien();
 		virtual void kill();
 		void setDeltaX(int x);
 		void setDeltaY(int y);
@@ -101,7 +102,7 @@ class Alien : public Spaceship
 		int getLen();
 		void move();
 		bool fire(int chk);
-		void checkFlightPlan();
+		virtual void checkFlightPlan();
 	private:
 		int m_points;
 		int m_flightPlanLength;
@@ -130,7 +131,9 @@ class Snagglegon : public Alien
 {
 	public:
 		Snagglegon(int xPos, int yPos, StudentWorld* world);
+		virtual void checkFlightPlan();
 		virtual void doSomething() override;
+
 };
 
 /////////////////////////////
@@ -187,6 +190,7 @@ class Goodie : public Projectile
 {
 	public:
 		Goodie(int imageID, int xPos, int yPos, int dir);
+		virtual ~Goodie() = 0;
 		virtual void doSomething();
 };
 

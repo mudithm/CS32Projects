@@ -164,6 +164,7 @@ void Spaceship::checkCollisions(int direction)
 		{
 			damage(player->getType());
 			player->damage(getType());
+			getWorld()->playSound(SOUND_DEATH);
 			kill();
 		}
 
@@ -171,7 +172,7 @@ void Spaceship::checkCollisions(int direction)
 
 
 
-	for (vector<Actor*>::const_iterator iterator = (getWorld()->getActors())->begin(); iterator != (getWorld()->getActors())->end();)
+	for (vector<Actor*>::iterator iterator = (getWorld()->getActors())->begin(); iterator != (getWorld()->getActors())->end();)
 	{
 		switch ((*iterator)->getType())
 		{
@@ -249,6 +250,11 @@ NachenBlaster::NachenBlaster(StudentWorld* world) : Spaceship(IID_NACHENBLASTER,
 void NachenBlaster::incTorpedoes(int num)
 {
 	m_numTorpedoes += num;
+}
+
+int NachenBlaster::getTorpedoes()
+{
+	return m_numTorpedoes;
 }
 
 void NachenBlaster::doSomething()
@@ -348,22 +354,25 @@ void Alien::kill()
 	getWorld()->addActor(new Explosion(getX(), getY()));
 	getWorld()->incKills();
 
-	int random = randInt(1, 6);
 	// decide drops 
 	switch(getType())
 	{
+		int random;
 		case IID_SMOREGON:
+			random = randInt(1, 6);
+
 			if (random == 1)
 			{
 				getWorld()->addActor(new RepairGoodie(getX(), getY()));
 			}
-
 			else if (random == 2)
 			{
 				getWorld()->addActor(new TorpedoGoodie(getX(), getY()));
 			}
 			break;
 		case IID_SNAGGLEGON:
+			random = randInt(1, 6);
+
 			if (random == 1)
 			{
 				getWorld()->addActor(new ExtraLifeGoodie(getX(), getY()));
@@ -384,7 +393,6 @@ bool Alien::fire(int chk)
 			{
 				case IID_SMALLGON:
 				case IID_SMOREGON:
-
 					getWorld()->addActor(new Turnip(getX() - 14, getY()));
 					getWorld()->playSound(SOUND_ALIEN_SHOOT);
 					break;
@@ -540,7 +548,24 @@ void Smoregon::doSomething()
 // Snagglegon Implementation
 
 Snagglegon::Snagglegon(int xPos, int yPos, StudentWorld* world) : Alien(IID_SNAGGLEGON, xPos, yPos, (10.0 * (1.0 + ((world->getLevel() -1)*.1))), 1.75, world, 1000)
-{}
+{
+	setDeltaX(-1);
+	setDeltaY(-1);
+}
+
+void Snagglegon::checkFlightPlan()
+{
+	if ((getY() + getSpeed()) >= VIEW_HEIGHT - 1)
+	{
+		setDeltaY(-1);
+		setDeltaX(-1);
+	}
+	else if ((getY() - getSpeed()) <= 0 )
+	{
+		setDeltaY(1);
+		setDeltaX(-1);
+	}
+}
 
 
 void Snagglegon::doSomething()
@@ -662,6 +687,9 @@ void Torpedo::doSomething()
 Goodie::Goodie(int imageID, int xPos, int yPos, int dir) : Projectile(imageID, xPos, yPos, 0)
 {}
 
+Goodie::~Goodie()
+{}
+
 void Goodie::doSomething()
 {
 	if (! isAlive())
@@ -684,7 +712,7 @@ RepairGoodie::RepairGoodie(int xPos, int yPos) : Goodie(IID_REPAIR_GOODIE, xPos,
 
 // Torpedo Goodie Implementation
 
-TorpedoGoodie::TorpedoGoodie(int xPos, int yPos) : Goodie(IID_REPAIR_GOODIE, xPos, yPos, 0)
+TorpedoGoodie::TorpedoGoodie(int xPos, int yPos) : Goodie(IID_TORPEDO_GOODIE, xPos, yPos, 0)
 {}
 
 
