@@ -4,6 +4,7 @@
 #include "GameWorld.h"
 #include "Actor.h"
 #include <string>
+#include <list>
 #include <cstdlib>
 using namespace std;
 
@@ -12,20 +13,20 @@ using namespace std;
 class StudentWorld : public GameWorld
 {
 public:
-    StudentWorld(std::string assetDir);
-    virtual ~StudentWorld();
-    virtual int init();
-    virtual int move();
-    virtual void cleanUp();
-    void addActor(Actor* act);
-    void decShips();
-    void incShips();
-    void incKills();
-    NachenBlaster* getPlayer();
-    vector<Actor*>* getActors();
+	StudentWorld(std::string assetDir);
+	virtual ~StudentWorld();
+	virtual int init();
+	virtual int move();
+	virtual void cleanUp();
+	void addActor(Actor* act);
+	void decShips();
+	void incShips();
+	void incKills();
+	NachenBlaster* getPlayer();
+	list<Actor*>* getActors();
 
 private:
-	vector<Actor*> m_actors;
+	list<Actor*> m_actors;
 	NachenBlaster* m_player;
 	int m_numKilled;
 	int m_numShips;

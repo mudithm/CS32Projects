@@ -1,6 +1,5 @@
 #include "Actor.h"
 #include "StudentWorld.h"
-
 #include <iostream>
 #include <cassert>
 using namespace std;
@@ -9,7 +8,7 @@ using namespace std;
 // Actor implementations
 
 
-Actor::Actor(int imageID, int xPos, int yPos, int dir, double size, int depth ): GraphObject(imageID, xPos, yPos, dir, size, depth), m_type(imageID)
+Actor::Actor(int imageID, int xPos, int yPos, int dir, double size, int depth) : GraphObject(imageID, xPos, yPos, dir, size, depth), m_type(imageID)
 {}
 
 int Actor::getType() const
@@ -45,7 +44,7 @@ Star::Star(int xPos, int yPos, double size) : Actor(IID_STAR, xPos, yPos, 0, siz
 
 void Star::doSomething()
 {
-	moveTo(getX()-1, getY());
+	moveTo(getX() - 1, getY());
 }
 
 bool Star::isAlive() const
@@ -99,32 +98,32 @@ void Spaceship::damage(int type)
 	int amt;
 	switch (type)
 	{
-		case IID_SMALLGON:
-			amt = 5;
-			break;
-		case IID_SNAGGLEGON:
-			amt = 15;
-			break;
-		case IID_SMOREGON:
-			amt = 5;			
-			break;
-		case IID_NACHENBLASTER:
-			amt = 999;
-			break;
-		case IID_CABBAGE:
-			amt = 2;
-			break;
-		case IID_TORPEDO:
-			amt = 8;
-			break;
-		case IID_TURNIP:
-			amt = 2;
-			break;
-		case IID_REPAIR_GOODIE:
-			amt = -10;
-			break;
-		default:
-			amt = 0;
+	case IID_SMALLGON:
+		amt = 5;
+		break;
+	case IID_SNAGGLEGON:
+		amt = 15;
+		break;
+	case IID_SMOREGON:
+		amt = 5;
+		break;
+	case IID_NACHENBLASTER:
+		amt = 999;
+		break;
+	case IID_CABBAGE:
+		amt = 2;
+		break;
+	case IID_TORPEDO:
+		amt = 8;
+		break;
+	case IID_TURNIP:
+		amt = 2;
+		break;
+	case IID_REPAIR_GOODIE:
+		amt = -10;
+		break;
+	default:
+		amt = 0;
 	}
 	m_HP -= amt;
 	if (m_HP > 50)
@@ -156,11 +155,11 @@ void Spaceship::setSpeed(double speed)
 
 void Spaceship::checkCollisions(int direction)
 {
-	
+
 	if (direction == 0)
 	{
 		NachenBlaster* player = getWorld()->getPlayer();
-		if (euclidean_dist(player->getX(), player->getY(), getX(), getY()) <= .75 * (player->getRadius() + getRadius()) )
+		if (euclidean_dist(player->getX(), player->getY(), getX(), getY()) <= .75 * (player->getRadius() + getRadius()))
 		{
 			damage(player->getType());
 			player->damage(getType());
@@ -172,69 +171,74 @@ void Spaceship::checkCollisions(int direction)
 
 
 
-	for (vector<Actor*>::iterator iterator = (getWorld()->getActors())->begin(); iterator != (getWorld()->getActors())->end();)
+	for (list<Actor*>::iterator iterator = (getWorld()->getActors())->begin(); iterator != (getWorld()->getActors())->end();)
 	{
 		switch ((*iterator)->getType())
 		{
-			case IID_CABBAGE:
-			case IID_TURNIP:
-			case IID_TORPEDO:
-				if ((*iterator)->travdir() == direction){
-					if((*iterator)->isAlive() && euclidean_dist(getX(), getY(), (*iterator)->getX(), (*iterator)->getY()) <= .75 * (getRadius() + (*iterator)->getRadius()) )
+		case IID_CABBAGE:
+		case IID_TURNIP:
+		case IID_TORPEDO:
+			if ((*iterator)->travdir() == direction) {
+				if ((*iterator)->isAlive() && euclidean_dist(getX(), getY(), (*iterator)->getX(), (*iterator)->getY()) <= .75 * (getRadius() + (*iterator)->getRadius()))
+				{
+					damage((*iterator)->getType());
+					if (!isAlive())
 					{
-						damage((*iterator)->getType());
-						if (! isAlive())
-						{
-							kill();
-							(*iterator)->kill();
-							return;
-						}
-						else
-						{
-							(*iterator)->kill();
-							getWorld()->playSound(SOUND_BLAST);
-							iterator++;
-						}
-					}else
+						kill();
+						(*iterator)->kill();
+						return;
+					}
+					else
+					{
+						(*iterator)->kill();
+						getWorld()->playSound(SOUND_BLAST);
 						iterator++;
-				}else
+					}
+				}
+				else
 					iterator++;
-				break;
-			case IID_LIFE_GOODIE:
-				if (direction == 180 && euclidean_dist(getX(), getY(), (*iterator)->getX(), (*iterator)->getY()) <= .75 * (getRadius() + (*iterator)->getRadius()))
-				{
-					getWorld()->increaseScore(100);
-					(*iterator)->kill();
-					getWorld()->playSound(SOUND_GOODIE);
-					getWorld()->incLives();
-					return;
-				}else
-					iterator++;
-				break;
-			case IID_REPAIR_GOODIE:
-				if (direction == 180 && euclidean_dist(getX(), getY(), (*iterator)->getX(), (*iterator)->getY()) <= .75 * (getRadius() + (*iterator)->getRadius()))
-				{
-					getWorld()->increaseScore(100);
-					(*iterator)->kill();
-					getWorld()->playSound(SOUND_GOODIE);
-					damage(IID_REPAIR_GOODIE);
-					return;
-				}else
-					iterator++;
-				break;
-			case IID_TORPEDO_GOODIE:
-				if (direction == 180 && euclidean_dist(getX(), getY(), (*iterator)->getX(), (*iterator)->getY()) <= .75 * (getRadius() + (*iterator)->getRadius()))
-				{
-					getWorld()->increaseScore(100);
-					(*iterator)->kill();
-					getWorld()->playSound(SOUND_GOODIE);
-					getWorld()->getPlayer()->incTorpedoes(5);
-					return;
-				}else
-					iterator++;
-				break;
-			default:
+			}
+			else
 				iterator++;
+			break;
+		case IID_LIFE_GOODIE:
+			if (direction == 180 && euclidean_dist(getX(), getY(), (*iterator)->getX(), (*iterator)->getY()) <= .75 * (getRadius() + (*iterator)->getRadius()))
+			{
+				getWorld()->increaseScore(100);
+				(*iterator)->kill();
+				getWorld()->playSound(SOUND_GOODIE);
+				getWorld()->incLives();
+				return;
+			}
+			else
+				iterator++;
+			break;
+		case IID_REPAIR_GOODIE:
+			if (direction == 180 && euclidean_dist(getX(), getY(), (*iterator)->getX(), (*iterator)->getY()) <= .75 * (getRadius() + (*iterator)->getRadius()))
+			{
+				getWorld()->increaseScore(100);
+				(*iterator)->kill();
+				getWorld()->playSound(SOUND_GOODIE);
+				damage(IID_REPAIR_GOODIE);
+				return;
+			}
+			else
+				iterator++;
+			break;
+		case IID_TORPEDO_GOODIE:
+			if (direction == 180 && euclidean_dist(getX(), getY(), (*iterator)->getX(), (*iterator)->getY()) <= .75 * (getRadius() + (*iterator)->getRadius()))
+			{
+				getWorld()->increaseScore(100);
+				(*iterator)->kill();
+				getWorld()->playSound(SOUND_GOODIE);
+				getWorld()->getPlayer()->incTorpedoes(5);
+				return;
+			}
+			else
+				iterator++;
+			break;
+		default:
+			iterator++;
 		}
 
 	}
@@ -263,64 +267,64 @@ void NachenBlaster::doSomething()
 	// Movement
 
 	int ch;
-	
+
 	if (getWorld()->getKey(ch))
 	{
 		switch (ch)
 		{
-			case KEY_PRESS_LEFT:
-				//Move ship left
-				if (getX() > 5)
-					moveTo(getX() - 6, getY());
-				break;
-			case KEY_PRESS_RIGHT:
-				//move ship right
-				if (getX() < VIEW_WIDTH - 6)
-					moveTo(getX() + 6, getY());
-				else if (getX() >= VIEW_WIDTH - 6)
-					moveTo(VIEW_WIDTH-1, getY());
-				break;
-			case KEY_PRESS_SPACE:
-				//fire cabbage if possible
-				if (getX() < VIEW_WIDTH - 12)
-				{		
-					if (m_cabbage >= 5)
-					{
-						m_cabbage -= 5;
-						getWorld()->addActor(new Cabbage(getX() + 12, getY()));
-						getWorld()->playSound(SOUND_PLAYER_SHOOT);
-					}
-
-				}
-				break;
-			case KEY_PRESS_UP:
-				if (getY() < VIEW_HEIGHT - 7)
-					moveTo(getX(), getY() + 6);
-				else 
-					moveTo(getX(), VIEW_HEIGHT - 1);
-				break;
-			case KEY_PRESS_DOWN:
-				if (getY() > 6)
-					moveTo(getX(), getY() - 6);
-				else
-					moveTo(getX(), 0);
-
-				break;
-			case KEY_PRESS_ESCAPE:
-				//
-				break;
-			case KEY_PRESS_TAB:
-				// fire torpedo if possible
-				if (m_numTorpedoes > 0)
+		case KEY_PRESS_LEFT:
+			//Move ship left
+			if (getX() > 5)
+				moveTo(getX() - 6, getY());
+			break;
+		case KEY_PRESS_RIGHT:
+			//move ship right
+			if (getX() < VIEW_WIDTH - 6)
+				moveTo(getX() + 6, getY());
+			else if (getX() >= VIEW_WIDTH - 6)
+				moveTo(VIEW_WIDTH - 1, getY());
+			break;
+		case KEY_PRESS_SPACE:
+			//fire cabbage if possible
+			if (getX() < VIEW_WIDTH - 12)
+			{
+				if (m_cabbage >= 5)
 				{
-					m_numTorpedoes--;
-					getWorld()->addActor(new Torpedo(getX() + 12, getY(), 0));
-					getWorld()->playSound(SOUND_TORPEDO);
+					m_cabbage -= 5;
+					getWorld()->addActor(new Cabbage(getX() + 12, getY()));
+					getWorld()->playSound(SOUND_PLAYER_SHOOT);
+				}
 
-				}	
-				break;
-			default:
-				break;
+			}
+			break;
+		case KEY_PRESS_UP:
+			if (getY() < VIEW_HEIGHT - 7)
+				moveTo(getX(), getY() + 6);
+			else
+				moveTo(getX(), VIEW_HEIGHT - 1);
+			break;
+		case KEY_PRESS_DOWN:
+			if (getY() > 6)
+				moveTo(getX(), getY() - 6);
+			else
+				moveTo(getX(), 0);
+
+			break;
+		case KEY_PRESS_ESCAPE:
+			//
+			break;
+		case KEY_PRESS_TAB:
+			// fire torpedo if possible
+			if (m_numTorpedoes > 0)
+			{
+				m_numTorpedoes--;
+				getWorld()->addActor(new Torpedo(getX() + 12, getY(), 0));
+				getWorld()->playSound(SOUND_TORPEDO);
+
+			}
+			break;
+		default:
+			break;
 		}
 	}
 	if (m_cabbage < 30)
@@ -340,7 +344,7 @@ int NachenBlaster::getCabbage() const
 
 // Alien implementations
 
-Alien::Alien(int imageID, int xPos, int yPos, double HP, double speed, StudentWorld* world, int points) : Spaceship (imageID, xPos, yPos, 0, 1.5, HP, speed, world, 1) , m_points(points), m_deltaX(0), m_deltaY(0), m_flightPlanLength(0)
+Alien::Alien(int imageID, int xPos, int yPos, double HP, double speed, StudentWorld* world, int points) : Spaceship(imageID, xPos, yPos, 0, 1.5, HP, speed, world, 1), m_points(points), m_deltaX(0), m_deltaY(0), m_flightPlanLength(0)
 {
 	getWorld()->incShips();
 }
@@ -355,31 +359,31 @@ void Alien::kill()
 	getWorld()->incKills();
 
 	// decide drops 
-	switch(getType())
+	switch (getType())
 	{
 		int random;
-		case IID_SMOREGON:
-			random = randInt(1, 6);
+	case IID_SMOREGON:
+		random = randInt(1, 6);
 
-			if (random == 1)
-			{
-				getWorld()->addActor(new RepairGoodie(getX(), getY()));
-			}
-			else if (random == 2)
-			{
-				getWorld()->addActor(new TorpedoGoodie(getX(), getY()));
-			}
-			break;
-		case IID_SNAGGLEGON:
-			random = randInt(1, 6);
+		if (random == 1)
+		{
+			getWorld()->addActor(new RepairGoodie(getX(), getY()));
+		}
+		else if (random == 2)
+		{
+			getWorld()->addActor(new TorpedoGoodie(getX(), getY()));
+		}
+		break;
+	case IID_SNAGGLEGON:
+		random = randInt(1, 6);
 
-			if (random == 1)
-			{
-				getWorld()->addActor(new ExtraLifeGoodie(getX(), getY()));
-			}
-			break;
-		default:
-			;
+		if (random == 1)
+		{
+			getWorld()->addActor(new ExtraLifeGoodie(getX(), getY()));
+		}
+		break;
+	default:
+		;
 	}
 }
 
@@ -389,25 +393,25 @@ bool Alien::fire(int chk)
 	{
 		if (chk == 1)
 		{
-			switch(getType())
+			switch (getType())
 			{
-				case IID_SMALLGON:
-				case IID_SMOREGON:
-					getWorld()->addActor(new Turnip(getX() - 14, getY()));
-					getWorld()->playSound(SOUND_ALIEN_SHOOT);
-					break;
-				case IID_SNAGGLEGON:
-					getWorld()->addActor(new Torpedo(getX() - 14, getY(), 180));
-					getWorld()->playSound(SOUND_TORPEDO);
-					break;
-				default:
-					;	
-			} 
+			case IID_SMALLGON:
+			case IID_SMOREGON:
+				getWorld()->addActor(new Turnip(getX() - 14, getY()));
+				getWorld()->playSound(SOUND_ALIEN_SHOOT);
+				break;
+			case IID_SNAGGLEGON:
+				getWorld()->addActor(new Torpedo(getX() - 14, getY(), 180));
+				getWorld()->playSound(SOUND_TORPEDO);
+				break;
+			default:
+				;
+			}
 
-			
+
 			return true;
 		}
-	} 
+	}
 	return false;
 }
 
@@ -443,37 +447,37 @@ int Alien::getLen()
 
 void Alien::checkFlightPlan()
 {
-	if (getLen() <= 0 || (getY() + getSpeed()) >= VIEW_HEIGHT - 1 || (getY() - getSpeed()) <= 0 )
+	if (getLen() <= 0 || (getY() + getSpeed()) >= VIEW_HEIGHT - 1 || (getY() - getSpeed()) <= 0)
 	{
 		if ((getY() + getSpeed()) >= VIEW_HEIGHT - 1)
 		{
 			setDeltaX(-1);
 			setDeltaY(-1);
-		} 
-		
+		}
+
 		else if ((getY() - getSpeed()) <= 0)
 		{
 			setDeltaX(-1);
 			setDeltaY(1);
-		} 
+		}
 
 		else if (getLen() <= 0)
 		{
 			int choice = randInt(1, 3);
 			switch (choice)
 			{
-				case 1:
-					setDeltaY(0);
-					setDeltaX(-1);
-					break;
-				case 2:
-					setDeltaY(1);
-					setDeltaX(-1);
-					break;
-				case 3:
-					setDeltaY(-1);
-					setDeltaX(-1);
-					break;
+			case 1:
+				setDeltaY(0);
+				setDeltaX(-1);
+				break;
+			case 2:
+				setDeltaY(1);
+				setDeltaX(-1);
+				break;
+			case 3:
+				setDeltaY(-1);
+				setDeltaX(-1);
+				break;
 			}
 		}
 
@@ -497,16 +501,16 @@ Alien::~Alien()
 
 // Smallgon Implementation
 
-Smallgon::Smallgon(int xPos, int yPos, StudentWorld* world) : Alien(IID_SMALLGON, xPos, yPos, (5.0 * (1.0 + ((world->getLevel() -1)*.1))), 2.0, world, 250)
+Smallgon::Smallgon(int xPos, int yPos, StudentWorld* world) : Alien(IID_SMALLGON, xPos, yPos, (5.0 * (1.0 + ((world->getLevel() - 1)*.1))), 2.0, world, 250)
 {}
 
 void Smallgon::doSomething()
 {
-	if (! isAlive())
+	if (!isAlive())
 		return;
 	checkCollisions(0);
 	checkFlightPlan();
-	int total = (20/(getWorld()->getLevel())) + 5;
+	int total = (20 / (getWorld()->getLevel())) + 5;
 	int check = randInt(1, total);
 	if (fire(check))
 		return;
@@ -516,17 +520,17 @@ void Smallgon::doSomething()
 
 // Smoregon Implementation
 
-Smoregon::Smoregon(int xPos, int yPos, StudentWorld* world) : Alien(IID_SMOREGON, xPos, yPos, (5.0 * (1.0 + ((world->getLevel() -1)*.1))), 2.0, world, 250)
+Smoregon::Smoregon(int xPos, int yPos, StudentWorld* world) : Alien(IID_SMOREGON, xPos, yPos, (5.0 * (1.0 + ((world->getLevel() - 1)*.1))), 2.0, world, 250)
 {}
 
 
 void Smoregon::doSomething()
 {
-	if (! isAlive())
+	if (!isAlive())
 		return;
 	checkCollisions(0);
 	checkFlightPlan();
-	int total = (20/(getWorld()->getLevel())) + 5;
+	int total = (20 / (getWorld()->getLevel())) + 5;
 	int check = randInt(1, total);
 	if (fire(check))
 		return;
@@ -539,7 +543,7 @@ void Smoregon::doSomething()
 			setFlightLen(VIEW_WIDTH);
 			setSpeed(5.0);
 		}
-	
+
 	}
 	move();
 }
@@ -547,7 +551,7 @@ void Smoregon::doSomething()
 
 // Snagglegon Implementation
 
-Snagglegon::Snagglegon(int xPos, int yPos, StudentWorld* world) : Alien(IID_SNAGGLEGON, xPos, yPos, (10.0 * (1.0 + ((world->getLevel() -1)*.1))), 1.75, world, 1000)
+Snagglegon::Snagglegon(int xPos, int yPos, StudentWorld* world) : Alien(IID_SNAGGLEGON, xPos, yPos, (10.0 * (1.0 + ((world->getLevel() - 1)*.1))), 1.75, world, 1000)
 {
 	setDeltaX(-1);
 	setDeltaY(-1);
@@ -560,7 +564,7 @@ void Snagglegon::checkFlightPlan()
 		setDeltaY(-1);
 		setDeltaX(-1);
 	}
-	else if ((getY() - getSpeed()) <= 0 )
+	else if ((getY() - getSpeed()) <= 0)
 	{
 		setDeltaY(1);
 		setDeltaX(-1);
@@ -570,11 +574,11 @@ void Snagglegon::checkFlightPlan()
 
 void Snagglegon::doSomething()
 {
-	if (! isAlive())
+	if (!isAlive())
 		return;
 	checkCollisions(0);
 	checkFlightPlan();
-	int total = (15/(getWorld()->getLevel())) + 10;
+	int total = (15 / (getWorld()->getLevel())) + 10;
 	int check = randInt(1, total);
 	if (fire(check))
 		return;
@@ -590,13 +594,13 @@ void Snagglegon::doSomething()
 /////////////////////////////////////
 
 // Projectile implementation
-Projectile::Projectile(int imageID, int xPos, int yPos, int dir) : Actor(imageID, xPos, yPos, dir, .5,  1), m_alive(true), m_travdir(dir)
+Projectile::Projectile(int imageID, int xPos, int yPos, int dir) : Actor(imageID, xPos, yPos, dir, .5, 1), m_alive(true), m_travdir(dir)
 {}
 
 bool Projectile::isAlive() const
 {
 	int x = getX(), y = getY();
-	if ( ! m_alive || y < 0 || y >= VIEW_HEIGHT - 1 || x < 0 || x >= VIEW_WIDTH)
+	if (!m_alive || y < 0 || y >= VIEW_HEIGHT - 1 || x < 0 || x >= VIEW_WIDTH)
 		return false;
 	return true;
 }
@@ -623,7 +627,7 @@ Cabbage::Cabbage(int xPos, int yPos) : Projectile(IID_CABBAGE, xPos, yPos, 0)
 
 void Cabbage::doSomething()
 {
-	if (! isAlive())
+	if (!isAlive())
 		return;
 
 
@@ -634,12 +638,12 @@ void Cabbage::doSomething()
 		moveTo(getX() + 8, getY());
 		if (getDirection() <= 339)
 			setDirection(getDirection() + 20);
-		else 
+		else
 			setDirection(0);
 	}
 
 
-	
+
 }
 
 // Turnip Implementation
@@ -650,13 +654,13 @@ Turnip::Turnip(int xPos, int yPos) : Projectile(IID_TURNIP, xPos, yPos, 0)
 
 void Turnip::doSomething()
 {
-	if (! isAlive())
+	if (!isAlive())
 		return;
 	moveTo(getX() - 6, getY());
 
 	if (getDirection() <= 339)
 		setDirection(getDirection() + 20);
-	else 
+	else
 		setDirection(0);
 
 }
@@ -667,13 +671,13 @@ Torpedo::Torpedo(int xPos, int yPos, int dir) : Projectile(IID_TORPEDO, xPos, yP
 
 void Torpedo::doSomething()
 {
-	if (! isAlive())
+	if (!isAlive())
 		return;
 
 
 	if (getDirection() == 180)
 		moveTo(getX() - 8, getY());
-	else 
+	else
 		moveTo(getX() + 8, getY());
 }
 
@@ -692,7 +696,7 @@ Goodie::~Goodie()
 
 void Goodie::doSomething()
 {
-	if (! isAlive())
+	if (!isAlive())
 		return;
 	moveTo(getX() - 0.75, getY() - 0.75);
 }
