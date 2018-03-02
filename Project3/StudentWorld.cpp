@@ -43,7 +43,7 @@ int StudentWorld::init()
 	ostringstream text;
 	text.setf(ios::fixed);
 	text.precision(0);
-	text << "Lives: " << getLives() << " Health: " << m_player->getHP() * 2 << " \% Score: " << getScore() << " Level: " << getLevel() << " Cabbages: " << (m_player->getCabbage() / 30.0) * 100.0 << "\% Torpedoes: " << m_player->getTorpedoes();
+	text << "Lives: " << getLives() << " Health: " << m_player->getHP() * 2 << "\% Score: " << getScore() << " Level: " << getLevel() << " Cabbages: " << (m_player->getCabbage() / 30.0) * 100.0 << "\% Torpedoes: " << m_player->getTorpedoes();
 
 
 	setGameStatText(text.str());
@@ -145,7 +145,7 @@ int StudentWorld::move()
 	ostringstream text;
 	text.setf(ios::fixed);
 	text.precision(0);
-	text << "Lives: " << getLives() << " Health: " << m_player->getHP() * 2 << " \% Score: " << getScore() << " Level: " << getLevel() << " Cabbages: " << (m_player->getCabbage() / 30.0) * 100.0 << "\% Torpedoes: " << m_player->getTorpedoes();
+	text << "Lives: " << getLives() << " Health: " << m_player->getHP() * 2 << "\% Score: " << getScore() << " Level: " << getLevel() << " Cabbages: " << (m_player->getCabbage() / 30.0) * 100.0 << "\% Torpedoes: " << m_player->getTorpedoes();
 
 	setGameStatText(text.str());
 

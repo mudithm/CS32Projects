@@ -29,7 +29,7 @@ Actor Class:
     I declared this as virtual because the getHP function for the aliens and the nachemblaster needs it.
 
     virtual int travDir:
-    I declared this as virtual because the spaceships and projectile types use it to check collisions, and when I iterate through the Actor* vector, it needs a discrete function at compile time.
+    I declared this as virtual because the spaceships and projectile types use it to check collisions, and when I iterate through the Actor* list, it needs a discrete function at compile time.
 
     virtual void setDir:
     I declared this for similar reasons as the function above; projectiles and spaceships need it and the iterator loops require it to compile.
@@ -275,8 +275,8 @@ StudentWorld Class:
     NachenBlaster* getPlayer:
     This function returns the player of the world
 
-    vector<Actor*>* getActors:
-    This function retuns a pointer to the actor vector 
+    list<Actor*>* getActors:
+    This function retuns a pointer to the actor list 
 
 
 2. Failed to Finish
@@ -358,4 +358,4 @@ StudentWorld.cpp
 StudentWorld Class:
 To test the StudentWorld class, I tested that an object of its type could be instantiated, that the GameWorld functions could be called on it, and that its member variables were instantiated correctly. I then tested the member functions, starting with the init function. I made sure that the variables were reset correctly and that the on-screen text was correct.
 
-To test the move function, i created an array of actors and manually set some of them to dead, and then checked that the behavior of each was correct. I then created a normal instance of the game and checked to see that it appeared to work as required. I then tested the functions to add new actors, increment and decrement the number of ships, increment the number of kills, and clean up the world, checking that the behavior of the move and init functions was correct after this. Finally, I checked that the getPlayer function correctly returned a pointer to the NachenBlaster and that the getActors function returned a pointer to the actor vector.
+To test the move function, i created an array of actors and manually set some of them to dead, and then checked that the behavior of each was correct. I then created a normal instance of the game and checked to see that it appeared to work as required. I then tested the functions to add new actors, increment and decrement the number of ships, increment the number of kills, and clean up the world, checking that the behavior of the move and init functions was correct after this. Finally, I checked that the getPlayer function correctly returned a pointer to the NachenBlaster and that the getActors function returned a pointer to the actor list.
