@@ -9,7 +9,7 @@
 #include <numeric>
 using namespace std;
 
-const string WORDLIST_FILE = "testWordList.txt";
+const string WORDLIST_FILE = "wordlist.txt";
 
 string encrypt(string plaintext)
 {

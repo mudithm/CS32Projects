@@ -27,7 +27,7 @@ private:
 
 TranslatorImpl::TranslatorImpl() : m_numPushes(0)
 {
-    string initArray(36, '?');
+    string initArray(26, '?');
     m_mappingTables.push(initArray);
 }
 
@@ -59,6 +59,11 @@ bool TranslatorImpl::pushMapping(string ciphertext, string plaintext)
 
     
     m_mappingTables.push(table);
+
+    cout << "-----------------------------------------------------------" << endl;
+    cout << "                 " << "abcdefghijklmnopqrstuvwxyz" << endl;
+    cout << "Current Mapping: " << table << endl;
+    cout << "-----------------------------------------------------------" << endl;
     m_numPushes++;
     return true;  // This compiles, but may not be correct
 }
@@ -67,7 +72,9 @@ bool TranslatorImpl::popMapping()
 {
     if (m_numPushes <= 0)
         return false;
+    cout << ">>>>>>>>>>>>>>>>Popping a mapping<<<<<<<<<<<<<<" << endl;
     m_numPushes--;
+    m_mappingTables.pop();
     return true;  // This compiles, but may not be correct
 }
 
@@ -87,7 +94,7 @@ string TranslatorImpl::getTranslation(const string& ciphertext) const
         else if (islower(ciphertext[i]))
             out += table[ciphertext[i] - 'a'];
         else
-            out += '?';
+            out += ciphertext[i];
     }
 
     return out;
