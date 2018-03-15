@@ -147,21 +147,26 @@ int WordListImpl::matches(string a, string b, string c) const
         char translation = c[i];
 
         if (isalpha(translation))
+	{
             if (! isalpha(cipher))
                 return 2;
             else if (translation != word)
                 return 1;
-        else if (translation == '?')
-            if (! isalpha(cipher))
+        }
+	else if (translation == '?')
+        {
+	    if (! isalpha(cipher))
                 return 2;
             else if (! isalpha(word))
                 return 1;
-        else if (translation == '\'')
-            if (cipher != '\'')
+        }
+	else if (translation == '\'')
+        {
+	    if (cipher != '\'')
                 return 2;
             else if (word != '\'')
                 return 1;
-        
+        }
     }
     return out;
 }

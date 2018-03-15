@@ -38,6 +38,7 @@ bool DecrypterImpl::load(string filename)
 vector<string> DecrypterImpl::crack(const string& ciphertext)
 {
 	vector<string> answers;
+	vector<string> oldCheck = m_checked;
 
 	Tokenizer tk(",;:.!()[]{}- \"1234567890#$%^&");
 	vector<string> list = tk.tokenize(ciphertext);
@@ -64,30 +65,34 @@ vector<string> DecrypterImpl::crack(const string& ciphertext)
 	}
 
 	m_checked.push_back(current);
+	cout << "-----" << endl;
 
 	string tl = m_tl.getTranslation(current);
 	vector<string> C = m_wordList.findCandidates(current, tl);
 
+//	cout << C.size() << " " << C[0] <<  endl;
 
 	if (C.size() == 0)
 	{
-			cout << "====reached the part where number of candidates is 0" << endl;
-
 		m_tl.popMapping();
 		return answers;
 	}
 
 	for (int i = 0; i < C.size(); i++)
 	{
-		if (!m_tl.pushMapping(current, C[i]))
+		if (! m_tl.pushMapping(current, C[i]))
+		{
 			continue;
-		cout << current << " " << C[i] << endl;
+		}
+
+		cout << current << ": " << C[i] << endl;
 		vector<string> translatedVector;
 		for (int k = 0; k < list.size(); k++)
 		{
 			translatedVector.push_back(m_tl.getTranslation(list[k]));
-			cout << ">" << translatedVector[k] << endl;
+			cout << translatedVector[k] << " ";
 		}
+		cout << endl;
 
 		int numberFullyTranslated = 0, numberInList = 0;
 		for (int k = 0; k < translatedVector.size(); k++)
@@ -105,47 +110,29 @@ vector<string> DecrypterImpl::crack(const string& ciphertext)
 		if (numberFullyTranslated == 0)
 		{
 			m_tl.popMapping();
-			cout << "====reached the part where numfully translated is 0" << endl;
 			continue;
 		}
-		else if (numberFullyTranslated == numberInList)
+		if (numberFullyTranslated == numberInList)
 		{
 			if (numberFullyTranslated < translatedVector.size())
 			{
-				cout << "====reached the part where numberFullyTranslated < translatedVector size" << endl;
-
 				vector<string> cracked = crack(ciphertext);
 				answers.insert(answers.end(), cracked.begin(), cracked.end());
-				m_tl.popMapping();
-				continue;
 			}
 			else if (numberFullyTranslated == translatedVector.size())
 			{
-				cout << "====reached the part where numberFullyTranslated equals translatedVector size" << endl;
-
 				string translatedString = m_tl.getTranslation(ciphertext);
-				cout << translatedString << endl;
 				answers.push_back(translatedString);
 				m_tl.popMapping();
-
 				continue;
 			}
-		}
-		else
-		{
-			cout << "====reached the part where not all translated in list" << endl;
-
-			m_tl.popMapping();
-			continue;
 		}
 
 	}
 
-	cout << "====reached the part where the function returns" << endl;
 	m_tl.popMapping();
 	return answers;
 }
-
 
 
 
