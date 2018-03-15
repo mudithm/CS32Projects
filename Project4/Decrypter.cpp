@@ -35,25 +35,25 @@ bool DecrypterImpl::load(string filename)
 
 vector<string> DecrypterImpl::crack(const string& ciphertext, vector<string> checked)
 {
-	cerr << "========================\nBeginning of a new iteration\n========================" << endl;
+	//cerr << "========================\nBeginning of a new iteration\n========================" << endl;
 	vector<string> answers;
 
 	Tokenizer tk(",;:.!()[]{}-\"#$%^&0123456789 ");
 	vector<string> cipherWords = tk.tokenize(ciphertext);
 
-	cerr << "CipherWords, tokenized: " << endl;
-	for (int i = 0; i < cipherWords.size(); i++)
-		cerr << cipherWords[i] << " | ";
-	cerr << endl;
+	//cerr << "CipherWords, tokenized: " << endl;
+	//for (int i = 0; i < cipherWords.size(); i++)
+		//cerr << cipherWords[i] << " | ";
+	//cerr << endl;
 
 	string largest = "";
 	int numInLargest = 0, ct = 0;
 
-	cerr << "Translations of these words: " << endl;
+	//cerr << "Translations of these words: " << endl;
 	for (int i = 0; i < cipherWords.size(); i++)
 	{
 		string tl = m_tl.getTranslation(cipherWords[i]);
-		cerr << tl << " | " ;
+		//cerr << tl << " | " ;
 		ct = count(tl.begin(), tl.end(), '?');
 		if (ct > numInLargest && find(checked.begin(), checked.end(), cipherWords[i]) == checked.end())
 		{
@@ -63,52 +63,52 @@ vector<string> DecrypterImpl::crack(const string& ciphertext, vector<string> che
 	}
 
 
-	cerr << endl;
-	cerr << "Largest untranslated: " << largest << endl;
+	//cerr << endl;
+	//cerr << "Largest untranslated: " << largest << endl;
 
-	cerr << "===Adding " << largest << " to the check list" << endl;
+	//cerr << "===Adding " << largest << " to the check list" << endl;
 	checked.push_back(largest);
 
 	string partialTranslation = m_tl.getTranslation(largest);
-	cerr << "Partial Translation of " << largest << ": " << partialTranslation << endl;
+	//cerr << "Partial Translation of " << largest << ": " << partialTranslation << endl;
 
 	vector<string> candidates = m_wordList.findCandidates(largest, partialTranslation);
 
-	cerr << "Candidates for " << largest << " with translation " << partialTranslation << ": ";
+	//cerr << "Candidates for " << largest << " with translation " << partialTranslation << ": ";
 	for (int i = 0; i < candidates.size(); i++)
-		cerr << candidates[i] << " ";
-	cerr << endl;
+		//cerr << candidates[i] << " ";
+	//cerr << endl;
 
 	if (candidates.empty())
 	{
-		cerr << "^^^Returning and popping map. No candidates for this translation." << endl;
+		//cerr << "^^^Returning and popping map. No candidates for this translation." << endl;
 		m_tl.popMapping();
 		return answers;
 	}
 
-	cerr << "Beginning to check each candidate: " << endl;
+	//cerr << "Beginning to check each candidate: " << endl;
 	for (int i = 0; i < candidates.size(); i++)
 	{
-		cerr << "Creating a temporary mapping with the candidate and cipherword..." << endl;
+		//cerr << "Creating a temporary mapping with the candidate and cipherword..." << endl;
 
 		if ( ! m_tl.pushMapping(largest, candidates[i]))
 		{
-			cerr << "Mapping failed." << endl;
+			//cerr << "Mapping failed." << endl;
 			continue;
 		}
 
-		cerr << "Finding resulting plaintext message: " << endl;
-		cerr << ">>> ";
-		cerr << m_tl.getTranslation(ciphertext) << endl;
+		//cerr << "Finding resulting plaintext message: " << endl;
+		//cerr << ">>> ";
+		//cerr << m_tl.getTranslation(ciphertext) << endl;
 
 		vector<string> translatedCipherWords;
 		for (int j = 0; j < cipherWords.size(); j++)
 			translatedCipherWords.push_back(m_tl.getTranslation(cipherWords[j]));
 
-		cerr << "translatedCipherWords: ";
-		for (int p = 0; p < translatedCipherWords.size(); p++)
-			cerr << translatedCipherWords[p] << " | " ;
-		cerr << endl;
+		//cerr << "translatedCipherWords: ";
+		//for (int p = 0; p < translatedCipherWords.size(); p++)
+			//cerr << translatedCipherWords[p] << " | " ;
+		//cerr << endl;
 
 		int numFullyTranslated = 0, numInList = 0;
 		for (int k = 0; k < translatedCipherWords.size(); k++)
@@ -119,38 +119,40 @@ vector<string> DecrypterImpl::crack(const string& ciphertext, vector<string> che
 				numFullyTranslated++;
 				if (m_wordList.contains(toPlowerCase(translatedCipherWords[k])))
 					numInList++;
-				else
+				else{
 					cout << "!!##$$$$$$$$Not found in list: " << translatedCipherWords[k] << endl;
+					break;
+				}
 
 			}
 
 
-			cerr << "	Word: " << translatedCipherWords[k] << " Status: " << m_wordList.contains(translatedCipherWords[k]) << endl;
+			//cerr << "	Word: " << translatedCipherWords[k] << " Status: " << m_wordList.contains(translatedCipherWords[k]) << endl;
 
 		}
-		cerr << "Number of words fully translated: " << numFullyTranslated << endl;
-		cerr << "Number of translated words in list: " << numInList << endl;
+		//cerr << "Number of words fully translated: " << numFullyTranslated << endl;
+		//cerr << "Number of translated words in list: " << numInList << endl;
 
 		if (numFullyTranslated > numInList)
 		{
-			cerr << ">>>>>Not all translated words found in list. Continuing..." << endl;
+			//cerr << ">>>>>Not all translated words found in list. Continuing..." << endl;
 			m_tl.popMapping();
 		}
 		else if (numFullyTranslated == numInList)
 		{
 			if (numFullyTranslated < translatedCipherWords.size())
 			{
-				cerr << "Not all words were translated, but all that were were in the list" << endl;
-				cerr << "vvvvvvvvvvvvvvvvGoing deeper...vvvvvvvvvvvvvvvvv" << endl;
-				//cerr << "=======removing " << largest << " from the checked list";
+				//cerr << "Not all words were translated, but all that were were in the list" << endl;
+				//cerr << "vvvvvvvvvvvvvvvvGoing deeper...vvvvvvvvvvvvvvvvv" << endl;
+				////cerr << "=======removing " << largest << " from the checked list";
 				vector<string> deeper = crack(ciphertext, checked);
 				answers.insert(answers.end(), deeper.begin(), deeper.end());
 			}
 			else if (numFullyTranslated == translatedCipherWords.size())
 			{
-				cerr << "Found a valid solution." << endl;
+				//cerr << "Found a valid solution." << endl;
 				string sol = m_tl.getTranslation(ciphertext);
-				cerr << ">>>>>>>>> " << sol << endl;
+				//cerr << ">>>>>>>>> " << sol << endl;
 				answers.push_back(sol);
 				m_tl.popMapping();
 			}
@@ -163,8 +165,8 @@ vector<string> DecrypterImpl::crack(const string& ciphertext, vector<string> che
 
 
 
-	cerr << "Reached the end of an iteration" << endl;
-	cerr << "===============================" << endl;
+	//cerr << "Reached the end of an iteration" << endl;
+	//cerr << "===============================" << endl;
 
 	m_tl.popMapping();
 	return answers;
