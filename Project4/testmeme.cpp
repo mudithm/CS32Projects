@@ -30,68 +30,72 @@ int main()
     Tokenizer testToken(" :<;>,./*");
     vector<string> meme = testToken.tokenize("sidfuma gnp9r<F9>224 <F9>5u2<F9>2u4<F9 >r2<F9>4u98430h9h a a;:::adf::f::af:af:;adfas;dfijadsf  adsfiha dsf f asdfi adsf  asdfdli sadf ,,asdf,a,fd,asdf ,,.,.,.,, , ., . ,"); 
     for (int i = 0; i < meme.size(); i++)
-        cout << meme[i] << endl;   
+        cerr << meme[i] << endl;   
 
     WordList ayylmao;
     ayylmao.loadWordList("testWordList.txt");
 
-    cout << ayylmao.contains("arbiter") << endl;    
-    cout << ayylmao.contains("arBiTer") << endl;
-        cout << ayylmao.contains("--tallat") << endl;
+    cerr << ayylmao.contains("arbiter") << endl;    
+    cerr << ayylmao.contains("arBiTer") << endl;
+        cerr << ayylmao.contains("--tallat") << endl;
 
-    cout << ayylmao.contains("This") << endl;
+    cerr << ayylmao.contains("This") << endl;
 
-    cout << ayylmao.contains("is") << endl;
+    cerr << ayylmao.contains("is") << endl;
 
-    cout << ayylmao.contains("a") << endl;
+    cerr << ayylmao.contains("a") << endl;
 
-    cout << ayylmao.contains("word") << endl;
+    cerr << ayylmao.contains("word") << endl;
 
-    cout << ayylmao.contains("ABCDEFB") << endl;
+    cerr << ayylmao.contains("ABCDEFB") << endl;
 
 
-    cout << "-------------------------" << endl;
+    cerr << "-------------------------" << endl;
 
 
     WordList wl;
-         if ( ! wl.loadWordList("wordlist.txt"))
-         //if ( ! wl.loadWordList("testWordList.txt"))
+        // if ( ! wl.loadWordList("wordlist.txt"))
+         if ( ! wl.loadWordList("testWordList.txt"))
          {
-         cout << "Unable to load word list" << endl;
+         cerr << "Unable to load word list" << endl;
          }
-         cout << "wordlist loaded" << endl;
-         cout << "---------" << endl;
+         cerr << "wordlist loaded" << endl;
+         cerr << "---------" << endl;
          if (wl.contains("onomatopoeia"))
-            cout << "I found onomatopoeia!" << endl;
+            cerr << "I found onomatopoeia!" << endl;
          else
-            cout << "Onomatopoeia is not in the word list!" << endl;
+            cerr << "Onomatopoeia is not in the word list!" << endl;
+        if (wl.contains("twenty"))
+            cerr << "I found Twenty!" << endl;
+         else
+            cerr << "twenty is not in the word list!" << endl;
          string cipher = "xyqbbq";
          string decodedSoFar = "?r????";
          vector<string> v = wl.findCandidates(cipher, decodedSoFar);
          if (v.empty())
-            cout << "No matches found" << endl;
+            cerr << "No matches found" << endl;
          else
          {
-            cout << "Found these matches:" << endl;
+            cerr << "Found these matches:" << endl;
             for (size_t k = 0; k < v.size(); k++)
-            cout << v[k] << endl; // writes grotto and troppo
+            cerr << v[k] << endl; // writes grotto and troppo
          }
 
 
 
          Translator t;
-          cout << t.getTranslation("HDXXHDLDQYL") << endl; // writes RE?
+          cerr << t.getTranslation("HDXXHDLDQYL") << endl; // writes RE?
 
  t.pushMapping("DHL", "ERD"); // DàE, HàR, LàD
  if ( ! t.pushMapping("QX", "RY")) // QàR, XàY
-    cout << "Both H and Q would map to R!" << endl;
+    cerr << "Both H and Q would map to R!" << endl;
     // The current mapping is still DàE, HàR, LàD with no
     // mapping for Q or X
- cout << t.getTranslation("HDXXHDLDQYL") << endl; // writes RE?
+ cerr << t.getTranslation("HDXXHDLDQYL") << endl; // writes RE?
  if ( ! t.pushMapping("H", "r")) // HàS
- cout << "H would map to both R and S!" << endl;
+ cerr << "H would map to both R and S!" << endl;
 
-    cout << t.popMapping() << endl;
-        cout << t.popMapping() << endl;
-            cout << t.popMapping() << endl;
+    cerr << t.popMapping() << endl;
+        cerr << t.popMapping() << endl;
+            cerr << t.popMapping() << endl;
 }
