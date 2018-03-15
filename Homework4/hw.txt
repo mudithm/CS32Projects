@@ -1,0 +1,13 @@
+Mudith Mallajosyula -- ID# 404937201 -- Homework 4
+
+2.  Attempting to insert with a key value of a Coord type would cause errors because the insert function makes use of a comparison operator, and no comparison operator is defined for the Coord class. 
+
+3b. You could not solve this problem without the two-parameter overload for listAll because there would be no way for the program to differentiate between the first and subsequent recursive calls. This would mean it would be impossible to decide whether or not to include a "=>" before the name of the Class object.
+
+4a. The time complexity is O(N^3). This is because it contains loop with N iterations within a loop of N iterations within a loop of N iterations, and each of these iterations contains a comparison.
+
+4b. The first nested loop now iterates "i" times per cycle instead of N. Since "i" goes from 0 to N-1, and the sum of a set of numbers 0 + 1 + 2 + ... + N-1 is equal to N(N-1)/2, and the loop within still has N iterations, the time   complexity is around O((N^3)/2), which can be simplified to O(N^3)
+
+5.  The time complexity of this function is O(N). This is because the function only iterates once through the smaller linked list, and a trivial amount for the swap function.
+
+
