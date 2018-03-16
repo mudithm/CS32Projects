@@ -37,7 +37,6 @@ bool decrypt(string ciphertext)
 		cout << "Unable to load word list file " << WORDLIST_FILE << endl;
 		return false;
 	}
-	cout << "finished loading wordlist" << endl;
 	for (const auto& s : d.crack(ciphertext))
 		cout << s << endl;
 	return true;

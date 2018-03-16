@@ -60,10 +60,10 @@ bool TranslatorImpl::pushMapping(string ciphertext, string plaintext)
     
     m_mappingTables.push(table);
 
-    //cerr << "-----------------------------------------------------------" << endl;
-    //cerr << "                 " << "abcdefghijklmnopqrstuvwxyz" << endl;
-    //cerr << "Current Mapping: " << table << endl;
-    //cerr << "-----------------------------------------------------------" << endl;
+    cerr << "-----------------------------------------------------------" << endl;
+    cerr << "                 " << "abcdefghijklmnopqrstuvwxyz" << endl;
+    cerr << "Current Mapping: " << table << endl;
+    cerr << "-----------------------------------------------------------" << endl;
     m_numPushes++;
     return true;  // This compiles, but may not be correct
 }
@@ -72,7 +72,7 @@ bool TranslatorImpl::popMapping()
 {
     if (m_numPushes <= 0)
         return false;
-    //cerr << ">>>>>>>>>>>>>>>>Popping a mapping<<<<<<<<<<<<<<" << endl;
+    cerr << ">>>>>>>>>>>>>>>>Popping a mapping<<<<<<<<<<<<<<" << endl;
     m_numPushes--;
     m_mappingTables.pop();
     return true;  // This compiles, but may not be correct
