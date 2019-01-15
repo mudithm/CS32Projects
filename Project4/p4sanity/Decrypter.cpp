@@ -75,7 +75,7 @@ vector<string> DecrypterImpl::crack(const string& ciphertext, vector<string> che
 	vector<string> candidates = m_wordList.findCandidates(largest, partialTranslation);
 
 	//cerr << "Candidates for " << largest << " with translation " << partialTranslation << ": ";
-	for (int i = 0; i < candidates.size(); i++)
+	//for (int i = 0; i < candidates.size(); i++)
 		//cerr << candidates[i] << " ";
 	//cerr << endl;
 
@@ -120,7 +120,6 @@ vector<string> DecrypterImpl::crack(const string& ciphertext, vector<string> che
 				if (m_wordList.contains(toPlowerCase(translatedCipherWords[k])))
 					numInList++;
 				else{
-					cout << "!!##$$$$$$$$Not found in list: " << translatedCipherWords[k] << endl;
 					break;
 				}
 

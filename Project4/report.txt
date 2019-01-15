@@ -1,0 +1,6 @@
+Mudith Mallajosyula -- ID# --------- -- Project 4 report
+
+1. As far as I know, there are no major bugs in my code, but it does take a long time to decrypt some phrases (for example, the John Kennedy quote from the examples).
+
+2.
+ 

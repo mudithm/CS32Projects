@@ -94,6 +94,7 @@ vector<string> WordListImpl::findCandidates(string cipherWord, string currTransl
         for (int i = 0; i < words->size(); i++)
         {
             string x = words->at(i);
+            ////cerr << "*****************" << x << endl;
             switch (matches(x, cipherWord, currTranslation))
             {
                 case 0:
@@ -109,6 +110,8 @@ vector<string> WordListImpl::findCandidates(string cipherWord, string currTransl
         }
 
     }
+
+    sort(candidates.begin(), candidates.end());
 
     return candidates;
 
